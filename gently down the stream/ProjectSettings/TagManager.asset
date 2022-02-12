@@ -6,6 +6,7 @@ TagManager:
   tags:
   - world bounds
   - stream
+  - rock
   layers:
   - Default
   - TransparentFX
