@@ -17,5 +17,5 @@ public static class PlayerStats
     public static float flatDamageResistance;
 
     public static float percentDamageResistance;
-    public static int coins;
+    public static int coins = 100;
 }

@@ -8,6 +8,7 @@ TagManager:
   - stream
   - rock
   - finish line
+  - pickup
   layers:
   - Default
   - TransparentFX

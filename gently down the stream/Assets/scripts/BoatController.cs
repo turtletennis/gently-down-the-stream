@@ -164,11 +164,24 @@ public class BoatController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag=="finish line")
+        string tag = collision.gameObject.tag;
+        Debug.Log(tag);
+        if (tag=="finish line")
         {
             Win();
         }
+        else if(tag == "pickup")
+        {
+            
+            var pickup = collision.gameObject.GetComponent<Pickup>();
+            pickup.Collect();
+        }
+        else
+        {
+            Debug.Log("Unknown trigger with tag " + tag);
+        }
     }
+
 
     void Win()
     {
