@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class BoatController : MonoBehaviour
 {
@@ -30,32 +31,87 @@ public class BoatController : MonoBehaviour
     public float sideDamageMultiplier;
     public float maxSideHitDamage;
 
+    [Space(10)]
+    [Header("UI")]
+    public HealthDisplay healthUI;
+    public EndGameText endGameText;
+    [Range(0,60)]
+    public float timeToWaitBeforeReset = 3;
+
     private float currentHealth;
     private System.Diagnostics.Stopwatch lifetime;
     private List<ResetPosition> objectsToReset;
     private Rigidbody2D rigidBody;
+    
     
     // Start is called before the first frame update
     void Start()
     {
         objectsToReset = FindObjectsOfType<ResetPosition>().ToList();
         rigidBody = GetComponent<Rigidbody2D>();
+
+        if(PlayerStats.initialised)
+        {
+
+            acceleration = PlayerStats.acceleration;
+            steeringPower = PlayerStats.steeringPower;
+            steeringPower = PlayerStats.steeringPower;
+            steeringAngleChange = PlayerStats.steeringAngleChange;
+            startSpeed = PlayerStats.startSpeed;
+            totalHealth = PlayerStats.totalHealth;
+        }
+        else
+        {
+            PlayerStats.acceleration = acceleration;
+            PlayerStats.flatDamageResistance = 0;
+            PlayerStats.percentDamageResistance = 0;
+            PlayerStats.steeringPower = steeringPower;
+            PlayerStats.steeringAngleChange = steeringAngleChange;
+            PlayerStats.coins = 0;
+            PlayerStats.startSpeed = startSpeed;
+            PlayerStats.totalHealth = totalHealth;
+            PlayerStats.initialised = true;
+        }
+
         Reset();
     }
 
-    private void Reset()
+    private void Reset(float timeToShowTextForBeforeStarting=0,bool returnToTitle = false)
     {
+        
+        
         lifetime = System.Diagnostics.Stopwatch.StartNew();
         this.transform.SetPositionAndRotation(startPosition.position,startPosition.rotation);
         rigidBody.velocity = Vector2.zero;
         rigidBody.angularVelocity = 0;
+        
+        StartCoroutine(Restart(timeToShowTextForBeforeStarting,returnToTitle));
+        
         currentSpeed = startSpeed;
         currentHealth = totalHealth;
-
-        foreach(var thing in objectsToReset)
+        healthUI.TotalHealth = totalHealth;
+        healthUI.CurrentHealth = currentHealth;
+        Debug.Log("Set current health to " + currentHealth);
+        foreach (var thing in objectsToReset)
         {
             thing.Reset();
         }
+        
+        
+        
+    }
+    
+    private IEnumerator Restart(float secondsDelay,bool returnToTitle)
+    {
+        
+        yield return new WaitForSeconds(secondsDelay);
+        endGameText.Hide();
+        if (returnToTitle)
+        {
+            SceneManager.LoadScene("Title");
+        }
+
+
     }
 
     private void Awake()
@@ -97,6 +153,7 @@ public class BoatController : MonoBehaviour
             currentHealth -= damage;
             Debug.Log($"Ouch a bank! took {damage} damage. Health {currentHealth}/{totalHealth}");
         }
+        healthUI.CurrentHealth = currentHealth;
 
         if (currentHealth<=0)
         {
@@ -117,14 +174,20 @@ public class BoatController : MonoBehaviour
     {
         lifetime.Stop();
         Debug.Log($"You won! You lasted {lifetime.Elapsed.TotalSeconds} seconds");
-        Reset();
+        endGameText.Win((int) lifetime.Elapsed.TotalSeconds, currentHealth);
+        Reset(timeToWaitBeforeReset,true);
+        
+
     }
 
     void Die()
     {
         lifetime.Stop();
         Debug.Log($"You lasted {lifetime.Elapsed.TotalSeconds} seconds");
-        Reset();
+        endGameText.Lose((int)lifetime.Elapsed.TotalSeconds);
+        PlayerStats.totalHealth++;
+        Reset(timeToWaitBeforeReset, true);
+        
     }
 
     // Update is called once per frame
@@ -133,6 +196,7 @@ public class BoatController : MonoBehaviour
         currentSpeed += acceleration * Time.deltaTime;
         //mousePosition = Mouse.current.position.ReadValue();
         var velocity = currentDirection;
+        velocity.x *= steeringPower;
         velocity.y += currentSpeed;
         transform.Translate(velocity * Time.deltaTime);
         if(velocity.x!=0)
