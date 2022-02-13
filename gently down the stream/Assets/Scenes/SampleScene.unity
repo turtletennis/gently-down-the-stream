@@ -477,6 +477,9 @@ MonoBehaviour:
   minRockHitDamage: 1
   rockDamageMultiplier: 25
   maxRockHitDamage: 20
+  minSideHitDamage: 0.1
+  sideDamageMultiplier: 10
+  maxSideHitDamage: 10
 --- !u!212 &203739323
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3536,6 +3539,7 @@ Transform:
   - {fileID: 1542708984}
   - {fileID: 2136687987}
   - {fileID: 2017611213}
+  - {fileID: 1817821566}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3544,6 +3548,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3212334259704288018, guid: ac2d1b5315bc7d7468893175338f73f4, type: 3}
   m_PrefabInstance: {fileID: 3212334259287561812}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1817821565
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1817821566}
+  - component: {fileID: 1817821567}
+  m_Layer: 0
+  m_Name: finish line
+  m_TagString: finish line
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1817821566
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1817821565}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 11.9, y: 65.53, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1771440157}
+  m_RootOrder: 19
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1817821567
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1817821565}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.92339134, y: 0.57455444}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 5.186039, y: 2.149109}
+  m_EdgeRadius: 0
 --- !u!4 &1831301048 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9205588165077219615, guid: d76a1e426665cbf4296ce3cfa58c66e8, type: 3}

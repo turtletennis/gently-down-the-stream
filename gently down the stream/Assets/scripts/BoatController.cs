@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,16 +21,25 @@ public class BoatController : MonoBehaviour
     
     [Header("Health and Damage")]
     public float totalHealth;
+    [Space(10)]
     public float minRockHitDamage;
     public float rockDamageMultiplier;
     public float maxRockHitDamage;
+    [Space(10)]
+    public float minSideHitDamage;
+    public float sideDamageMultiplier;
+    public float maxSideHitDamage;
+
     private float currentHealth;
     private System.Diagnostics.Stopwatch lifetime;
-    
+    private List<ResetPosition> objectsToReset;
+    private Rigidbody2D rigidBody;
     
     // Start is called before the first frame update
     void Start()
     {
+        objectsToReset = FindObjectsOfType<ResetPosition>().ToList();
+        rigidBody = GetComponent<Rigidbody2D>();
         Reset();
     }
 
@@ -38,8 +47,15 @@ public class BoatController : MonoBehaviour
     {
         lifetime = System.Diagnostics.Stopwatch.StartNew();
         this.transform.SetPositionAndRotation(startPosition.position,startPosition.rotation);
+        rigidBody.velocity = Vector2.zero;
+        rigidBody.angularVelocity = 0;
         currentSpeed = startSpeed;
         currentHealth = totalHealth;
+
+        foreach(var thing in objectsToReset)
+        {
+            thing.Reset();
+        }
     }
 
     private void Awake()
@@ -66,12 +82,42 @@ public class BoatController : MonoBehaviour
             currentHealth -= damage;
             Debug.Log($"Ouch a rock! took {damage} damage. Health {currentHealth}/{totalHealth}");
         }
+        else if (col.gameObject.tag == "stream")
+        {
 
-        if(currentHealth<=0)
+            float damage = col.relativeVelocity.magnitude * sideDamageMultiplier;
+            if (damage < minSideHitDamage)
+            {
+                damage = minSideHitDamage;
+            }
+            else if (damage > maxSideHitDamage)
+            {
+                damage = maxSideHitDamage;
+            }
+            currentHealth -= damage;
+            Debug.Log($"Ouch a bank! took {damage} damage. Health {currentHealth}/{totalHealth}");
+        }
+
+        if (currentHealth<=0)
         {
             Die();
         }
         
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag=="finish line")
+        {
+            Win();
+        }
+    }
+
+    void Win()
+    {
+        lifetime.Stop();
+        Debug.Log($"You won! You lasted {lifetime.Elapsed.TotalSeconds} seconds");
+        Reset();
     }
 
     void Die()

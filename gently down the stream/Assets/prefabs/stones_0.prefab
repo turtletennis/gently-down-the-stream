@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9205588165077219608}
   - component: {fileID: 9205588165077219614}
   - component: {fileID: 6660032237770910918}
+  - component: {fileID: 4463718279406610655}
   m_Layer: 0
   m_Name: stones_0
   m_TagString: rock
@@ -121,3 +122,15 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1.3, y: 0.6}
   m_Direction: 1
+--- !u!114 &4463718279406610655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9205588165077219609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30efa5aa11e267445987354fc39ab55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
