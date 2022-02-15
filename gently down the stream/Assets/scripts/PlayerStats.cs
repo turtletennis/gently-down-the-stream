@@ -11,6 +11,7 @@ public static class PlayerStats
     public static float startSpeed;
     public static float acceleration;
     public static float totalHealth;
+    public static float oarPower;
 
     public static float steeringAngleChange;
     public static float steeringPower;
@@ -18,4 +19,6 @@ public static class PlayerStats
 
     public static float percentDamageResistance;
     public static int coins = 100;
+
+    public static int longestSurvivalTime = 0;
 }

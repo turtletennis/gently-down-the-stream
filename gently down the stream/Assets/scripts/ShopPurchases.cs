@@ -13,6 +13,7 @@ public static class ShopPurchases
     public static int healthUpgrades;
     public static int pcDamageResistUpgrades;
     public static int flatDamageResistUpgrades;
+    public static int oarsUpgrades;
     
 
 }

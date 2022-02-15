@@ -37,6 +37,7 @@ public class BoatController : MonoBehaviour
     public EndGameText endGameText;
     [Range(0,60)]
     public float timeToWaitBeforeReset = 3;
+    public int SecondsPerCoinGain = 10;
 
     private float currentHealth;
     private System.Diagnostics.Stopwatch lifetime;
@@ -186,19 +187,40 @@ public class BoatController : MonoBehaviour
     void Win()
     {
         lifetime.Stop();
-        Debug.Log($"You won! You lasted {lifetime.Elapsed.TotalSeconds} seconds");
-        endGameText.Win((int) lifetime.Elapsed.TotalSeconds, currentHealth);
+        int time = (int) lifetime.Elapsed.TotalSeconds;
+        //Debug.Log($"You won! You lasted {lifetime.Elapsed.TotalSeconds} seconds");
+        bool newRecord = UpdateNewRecord(time);
+        
+        endGameText.Win(time, currentHealth,newRecord);
+        
         Reset(timeToWaitBeforeReset,true);
         
 
     }
+    
+    /// <summary>
+    /// Updates record time if time given is longer than the existing record. Returns true if it's a new record, false otherwise.
+    /// </summary>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    bool UpdateNewRecord(int time)
+    {
+        PlayerStats.coins += time / SecondsPerCoinGain;
+        if (time > PlayerStats.longestSurvivalTime)
+        {
+            PlayerStats.longestSurvivalTime = time;
+            return true;
+        }
+        return false;
+    }
 
     void Die()
     {
+        int time = (int)lifetime.Elapsed.TotalSeconds;
+        bool newRecord = UpdateNewRecord(time);
         lifetime.Stop();
-        Debug.Log($"You lasted {lifetime.Elapsed.TotalSeconds} seconds");
-        endGameText.Lose((int)lifetime.Elapsed.TotalSeconds);
-        PlayerStats.totalHealth++;
+        //Debug.Log($"You lasted {lifetime.Elapsed.TotalSeconds} seconds");
+        endGameText.Lose(time,newRecord);
         Reset(timeToWaitBeforeReset, true);
         
     }
@@ -210,6 +232,7 @@ public class BoatController : MonoBehaviour
         //mousePosition = Mouse.current.position.ReadValue();
         var velocity = currentDirection;
         velocity.x *= steeringPower;
+        velocity.y *= PlayerStats.oarPower;
         velocity.y += currentSpeed;
         transform.Translate(velocity * Time.deltaTime);
         if(velocity.x!=0)

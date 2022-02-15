@@ -11,7 +11,7 @@ public class Pickup : MonoBehaviour
         
     }
 
-    public void Collect()
+    public virtual void Collect()
     {
         enabled = false;
         GetComponent<SpriteRenderer>().enabled = false;

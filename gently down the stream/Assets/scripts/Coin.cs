@@ -11,8 +11,9 @@ namespace Assets
     {
         public int value = 10;
 
-        public new void Collect()
+        public override void Collect()
         {
+            Debug.Log("Picked up " + name);
             PlayerStats.coins += value;
             base.Collect();
         }
